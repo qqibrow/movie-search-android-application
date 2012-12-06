@@ -24,7 +24,7 @@
         android:layout_alignLeft="@+id/EditMovieName"
         android:layout_centerVertical="true"
         android:onClick="onMovieClicked"
-        android:text="Button" />
+        android:text="submit" />
 
     <Spinner
         android:id="@+id/spinner1"

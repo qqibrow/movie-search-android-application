@@ -1,8 +1,6 @@
 package com.fedorvlasov.lazylist;
 
 import com.fedorvlasov.*;
-import com.fedorvlasov.lazylist.SessionEvents.AuthListener;
-import com.fedorvlasov.lazylist.SessionEvents.LogoutListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -204,7 +202,7 @@ public class MainActivity extends FacebookActivity  {
 	    	
 		//    builder.setMessage("This will end the activity");
 		//    builder.setCancelable(true);
-		    builder.setPositiveButton("post", new OkOnClickListener());
+		  //  builder.setPositiveButton("post", new OkOnClickListener());
 		//    builder.setNegativeButton("No, no", new CancelOnClickListener());
 		   // AlertDialog dialog = builder.create();
 		  //  dialog.show();
