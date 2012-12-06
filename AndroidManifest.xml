@@ -12,12 +12,8 @@
             android:name="com.fedorvlasov.lazylist.MainActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+        
         <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name" />
@@ -29,6 +25,11 @@
         <activity
             android:name="com.fedorvlasov.lazylist.FormView"
             android:label="@string/title_activity_form_view" >
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class FormView extends Activity {
 
@@ -46,13 +47,40 @@ public class FormView extends Activity {
 		final Spinner feedbackSpinner = (Spinner) findViewById(R.id.spinner1);
 		String feedbackType = feedbackSpinner.getSelectedItem().toString();
 		//System.out.println(name + "   " + feedbackType);
-	//	String url = servletUrl + "title=" + name + "&mediaType=" + feedbackType;
 		
-		String urlString = "http://cs-server.usc.edu:11104/examples/servlet/HelloWorldExample?title=batman&mediaType=feature";
+		if(name.equals(""))
+		{
+			 Toast.makeText(this,
+                     "Sorry, the input cannot be empty",
+                 Toast.LENGTH_SHORT).show();
+			return;
+		}
 		
-		//Intent myIntent = new Intent(this, MainActivity.class);
-	//	myIntent.putExtra("url",urlString);
-	//	startActivity(myIntent);
+		
+		String value;
+		if(feedbackType.equals("All Type"))
+		{
+			value = "feature,tv_series,game";
+		}
+		else if(feedbackType.equals("Video Game"))
+		{
+			value = "game";
+		}
+		else if(feedbackType.equals("TV Series"))
+		{
+			value = "tv_series";
+		}
+		else {
+			value = "feature";
+		}
+		
+		String urlString = servletUrl + "title=" + name + "&mediaType=" + value;
+		
+	//	String urlString = "http://cs-server.usc.edu:11104/examples/servlet/HelloWorldExample?title=batman&mediaType=feature";
+		
+		Intent myIntent = new Intent(this, MainActivity.class);
+		myIntent.putExtra("url",urlString);
+		startActivity(myIntent);
 		
 	}
 
