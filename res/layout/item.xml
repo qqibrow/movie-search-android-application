@@ -12,4 +12,10 @@
   	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
 	  android:layout_weight="1" android:layout_gravity="left|center_vertical" android:textSize="20dip" android:layout_marginLeft="10dip"/>
+  
+    <TextView
+  	  android:id="@+id/ratin"
+  	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_weight="1" android:layout_gravity="left|center_vertical" android:textSize="20dip" android:layout_marginRight="10dip"/>
 </LinearLayout>

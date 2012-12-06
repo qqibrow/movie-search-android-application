@@ -43,7 +43,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.*;
-import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 import com.facebook.widget.*;
 import com.facebook.widget.WebDialog.OnCompleteListener;
@@ -204,6 +203,11 @@ public class MainActivity extends FacebookActivity  {
 	    	Button postButton = (Button)dialoglayout.findViewById(R.id.postButton);
 	    	TextView nameText = (TextView)dialoglayout.findViewById(R.id.name);
 	    	ImageView imgView = (ImageView)dialoglayout.findViewById(R.id.detailImage);
+	    	
+	    	
+	    	
+	    	
+	    	
 	    	adapter.imageLoader.DisplayImage(movie.getImageUrl(), imgView);
 	    	nameText.setText(movie.getTitle());
 	    	postButton.setOnClickListener(postfacebooklistener);
