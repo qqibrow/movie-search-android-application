@@ -171,6 +171,36 @@ public class MainActivity extends FacebookActivity  {
     	
     }
   */
+    
+    
+		@Override
+		protected void onPrepareDialog(int id, Dialog dialog) {
+		    //Always call through to super implementation
+		    super.onPrepareDialog(id, dialog);
+		    MovieDetails movie = movies.get(currentItem);
+		    switch (id) {
+		         case DIALOG_ALERT:
+		        	// View dialoglayout = ((AlertDialog)dialog).getCurrentFocus();
+		        	 AlertDialog dialoglayout = (AlertDialog)dialog;
+		        //	 LayoutInflater inflater = getLayoutInflater();
+		 	   // 	View dialoglayout = inflater.inflate(R.layout.detail, null);
+		 	    	
+		        	 Button postButton = (Button)dialoglayout.findViewById(R.id.postButton);
+		 	    	TextView nameText = (TextView)dialoglayout.findViewById(R.id.name);
+		 	    	ImageView imgView = (ImageView)dialoglayout.findViewById(R.id.detailImage);
+		 	    	TextView yearText = (TextView)dialoglayout.findViewById(R.id.year);
+		 	    	TextView directorText = (TextView)dialoglayout.findViewById(R.id.director);
+		 	    	TextView ratingText = (TextView)dialoglayout.findViewById(R.id.rating);
+		 	    	
+		 	    	adapter.imageLoader.DisplayImage(movie.getImageUrl(), imgView);
+		 	    	nameText.setText("Title: " + movie.getTitle());
+		 	    	yearText.setText("Year: " + movie.getYear());
+		 	    	directorText.setText("Director: " + movie.getDirector());
+		 	    	ratingText.setText("Rating: " + movie.getRating() + "/10");
+		 	    	postButton.setOnClickListener(postfacebooklistener);
+		            break;
+		    }
+		}
 			
 		@Override
 		protected Dialog onCreateDialog(int id) {
