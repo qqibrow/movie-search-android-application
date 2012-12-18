@@ -1,8 +1,6 @@
 package com.fedorvlasov.lazylist;
 
 import com.fedorvlasov.*;
-import com.fedorvlasov.lazylist.SessionEvents.AuthListener;
-import com.fedorvlasov.lazylist.SessionEvents.LogoutListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,8 +41,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.*;
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.Facebook;
 import com.facebook.widget.*;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
@@ -53,13 +49,14 @@ public class MainActivity extends FacebookActivity  {
     private static final int DIALOG_ALERT = 0;
 	ListView list;
     LazyAdapter adapter;  
-    String url = "http://cs-server.usc.edu:11104/examples/servlet/HelloWorldExample?title=batman&mediaType=feature";
+  //  String url = "http://cs-server.usc.edu:11104/examples/servlet/HelloWorldExample?title=batman&mediaType=feature";
+    String url;
 	Context context;
 	ArrayList<MovieDetails> movies;
 	ArrayList<Map<String, Object>> maplist;
     int currentItem;
 	boolean isLogined = false;
-	
+	 MainActivity main = this;
     //facebook   
     public static final String APP_ID = "298559216912822";
 //    Facebook facebook = new Facebook("298559216912822");
@@ -72,64 +69,46 @@ public class MainActivity extends FacebookActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        Intent intent = getIntent();
+		url = intent.getStringExtra("url");
         context = this;
+        
         movies = fetchMovieFromUrl(url);
-        list=(ListView)findViewById(R.id.list);
-     //   statusCallback = new SessionStatusCallback();
+       
+//        if(movies.size() == 0)
+//        {
+//        	adapter=new LazyAdapter(this, movies);
+//        	return;
+//        }
         
-        adapter=new LazyAdapter(this, movies);
-        list.setAdapter(adapter);
-   
-        list.setOnItemClickListener(new OnItemClickListener(){
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-			//	System.out.println("hello");
-				currentItem = (int)arg3;
-				 showDialog(DIALOG_ALERT);
-				
-        Button b=(Button)findViewById(R.id.button1);
-        b.setOnClickListener(listener);
-    }
-        });
-     //   this.openSession();
-        
-        
-        
-        /*
-        //init facebook
-     // Get the active Session, if it exists
-        Session session = Session.getActiveSession();
-        // If no active session is found, check if you can
-        // find a cached session.
-        if (session == null) {
-            if (savedInstanceState != null) {
-                // Restore any session saved in the state
-                session = Session.restoreSession(this, 
-                              null, statusCallback, savedInstanceState);
-            }   
-            // Check if there was any session restored
-            if (session == null) {
-                // Instantiate a new Session 
-                session = new Session(this);
-            }   
-            // Set the active session
-            Session.setActiveSession(session);
-            // Check if a cached token is available
-            if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
-                // If a cached token found, open the session
-                // and call the session state changed callback.
-                // The opened session will have the same permissions
-                // that it was cached with.
-                session.openForRead(new Session.OpenRequest(this)
-                                               .setCallback(statusCallback));
-                
+        	list=(ListView)findViewById(R.id.list);
+            //   statusCallback = new SessionStatusCallback();
                
-            }   
-        }
-        onClickFacebookLogin();
-        */
+               adapter=new LazyAdapter(this, movies);
+               list.setAdapter(adapter);
+          
+               list.setOnItemClickListener(new OnItemClickListener(){
+
+       			@Override
+       			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+       					long arg3) {
+       				currentItem = (int)arg3;
+       				 showDialog(DIALOG_ALERT);
+       				
+             //  Button b=(Button)findViewById(R.id.button1);
+           //    b.setVisibility(0);
+           //    b.setOnClickListener(listener);
+       					}
+               });
+               
+               if(movies.size() == 0)
+               {
+	               Toast.makeText(this,
+	                       "Sorry, Cannot find any movies",
+	                   Toast.LENGTH_LONG).show();
+               }
+            //batman   this.openSession();
+               	
     }
     
     
@@ -143,6 +122,8 @@ public class MainActivity extends FacebookActivity  {
     protected void onSessionStateChange(SessionState state, Exception exception) {
       // user has either logged in or not ...
       if (state.isOpened()) {
+    	  
+    	  System.out.print("in open");
         // make request to the /me API
 //        Request request = Request.newMeRequest(
 //          this.getSession(),
@@ -190,6 +171,36 @@ public class MainActivity extends FacebookActivity  {
     	
     }
   */
+    
+    
+		@Override
+		protected void onPrepareDialog(int id, Dialog dialog) {
+		    //Always call through to super implementation
+		    super.onPrepareDialog(id, dialog);
+		    MovieDetails movie = movies.get(currentItem);
+		    switch (id) {
+		         case DIALOG_ALERT:
+		        	// View dialoglayout = ((AlertDialog)dialog).getCurrentFocus();
+		        	 AlertDialog dialoglayout = (AlertDialog)dialog;
+		        //	 LayoutInflater inflater = getLayoutInflater();
+		 	   // 	View dialoglayout = inflater.inflate(R.layout.detail, null);
+		 	    	
+		        	 Button postButton = (Button)dialoglayout.findViewById(R.id.postButton);
+		 	    	TextView nameText = (TextView)dialoglayout.findViewById(R.id.name);
+		 	    	ImageView imgView = (ImageView)dialoglayout.findViewById(R.id.detailImage);
+		 	    	TextView yearText = (TextView)dialoglayout.findViewById(R.id.year);
+		 	    	TextView directorText = (TextView)dialoglayout.findViewById(R.id.director);
+		 	    	TextView ratingText = (TextView)dialoglayout.findViewById(R.id.rating);
+		 	    	
+		 	    	adapter.imageLoader.DisplayImage(movie.getImageUrl(), imgView);
+		 	    	nameText.setText("Title: " + movie.getTitle());
+		 	    	yearText.setText("Year: " + movie.getYear());
+		 	    	directorText.setText("Director: " + movie.getDirector());
+		 	    	ratingText.setText("Rating: " + movie.getRating() + "/10");
+		 	    	postButton.setOnClickListener(postfacebooklistener);
+		            break;
+		    }
+		}
 			
 		@Override
 		protected Dialog onCreateDialog(int id) {
@@ -204,8 +215,15 @@ public class MainActivity extends FacebookActivity  {
 	    	Button postButton = (Button)dialoglayout.findViewById(R.id.postButton);
 	    	TextView nameText = (TextView)dialoglayout.findViewById(R.id.name);
 	    	ImageView imgView = (ImageView)dialoglayout.findViewById(R.id.detailImage);
+	    	TextView yearText = (TextView)dialoglayout.findViewById(R.id.year);
+	    	TextView directorText = (TextView)dialoglayout.findViewById(R.id.director);
+	    	TextView ratingText = (TextView)dialoglayout.findViewById(R.id.rating);
+	    	
 	    	adapter.imageLoader.DisplayImage(movie.getImageUrl(), imgView);
-	    	nameText.setText(movie.getTitle());
+	    	nameText.setText("Title: " + movie.getTitle());
+	    	yearText.setText("Year: " + movie.getYear());
+	    	directorText.setText("Director: " + movie.getDirector());
+	    	ratingText.setText("Rating: " + movie.getRating() + "/10");
 	    	postButton.setOnClickListener(postfacebooklistener);
 	    	
 	    	
@@ -214,8 +232,8 @@ public class MainActivity extends FacebookActivity  {
 	    	
 		//    builder.setMessage("This will end the activity");
 		//    builder.setCancelable(true);
-		 //   builder.setPositiveButton("I agree", new OkOnClickListener());
-		    builder.setNegativeButton("No, no", new CancelOnClickListener());
+		  //  builder.setPositiveButton("post", new OkOnClickListener());
+		//    builder.setNegativeButton("No, no", new CancelOnClickListener());
 		   // AlertDialog dialog = builder.create();
 		  //  dialog.show();
 	    	return builder.show();
@@ -231,14 +249,24 @@ public class MainActivity extends FacebookActivity  {
 		    Toast.LENGTH_LONG).show();
 		  }
 		}
-		/*
+		
 		private final class OkOnClickListener implements
 		    DialogInterface.OnClickListener {
 		  public void onClick(DialogInterface dialog, int which) {
-			  MainActivity.this.finish();
+	   if(!isLogined)
+        {
+		   main.openSessionForPublish(APP_ID, Arrays.asList("publish_stream"));
+        	isLogined = true;
+        }
+	   else
+	   {
+		   publishFeedDialog();
+	   }
+    //	publishFeedDialog();         
+        
 		  }
 		} 		
-	*/		
+			
     private ArrayList<MovieDetails> fetchMovieFromUrl(String url)
     {
   	  
@@ -256,11 +284,11 @@ public class MainActivity extends FacebookActivity  {
             }
             JSONObject  resultsObj = new JSONObject (jsonString);
             JSONArray jsonArray = resultsObj.getJSONObject("results").getJSONArray("result");
-            System.out.println("Number of entries " + jsonArray.length());
+//            System.out.println("Number of entries " + jsonArray.length());
           
-            for (int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0;i < jsonArray.length(); i++) {
               JSONObject jsonObject = jsonArray.getJSONObject(i);
-              System.out.println(jsonObject.getString("year"));
+             // System.out.println(jsonObject.getString("year"));
               
               
               // get the image
@@ -307,12 +335,15 @@ public class MainActivity extends FacebookActivity  {
         public void onClick(View arg0) {
         	// post to facebook
         	
-        if(!isLogined)
-        {
-        	login();
-        	isLogined = true;
-        }      	
-    	publishFeedDialog();         
+        	 if(!isLogined)
+             {
+     		   main.openSessionForPublish(APP_ID, Arrays.asList("publish_stream"));
+             	isLogined = true;          	
+             }
+     	   else
+     	   {
+     		   publishFeedDialog();
+     	   }       
         }
     };
  
@@ -331,7 +362,7 @@ public class MainActivity extends FacebookActivity  {
         params.putString("description", movie.getTitle() +" released in " + movie.getYear() +" has a rating of " + movie.getRating());
         params.putString("link",movie.getDetailURL());
         params.putString("picture", movie.getImageUrl());
-        String jsonstr = "{\"look at user reviews\" : {\"text\": 'here',\"href\": " + "'" + movie.getDetailURL() +  "review" + "'" + "}}";
+        String jsonstr = "{\"look at user reviews\" : {\"text\": 'here',\"href\": " + "'" + movie.getDetailURL() +  "reviews" + "'" + "}}";
      //   JSONObject obj = new JSONObject(jsonstr);
         
       //  params.putString("properties", "");

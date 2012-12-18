@@ -16,7 +16,7 @@ public class MovieDetails {
 	{
 		this.title = title;
 		this.imageUrl = image;
-		this.year = director;
+		this.year = year;
 		this.rating = rating;
 		this.director = director;
 		this.detailURL = detailURL;
